@@ -1,0 +1,873 @@
+/* =====================================================================
+   لِقلبِك وحدَه — Stylesheet
+   نظام الألوان: أسود دافئ + وردي نيون + أحمر نبيذي + أبيض
+   ===================================================================== */
+
+:root {
+  /* --- الألوان الأساسية --- */
+  --black-0: #06020a;
+  --black-1: #0d0410;
+  --black-2: #170718;
+  --wine: #3a0617;
+  --pink: #ff5da2;
+  --pink-soft: #ffb3d1;
+  --pink-deep: #ff2f6e;
+  --red: #ff1744;
+  --red-deep: #8f001c;
+  --white: #fff6f8;
+
+  /* --- سطوح زجاجية --- */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-strong: rgba(20, 6, 16, 0.55);
+  --glass-border: rgba(255, 140, 180, 0.28);
+  --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.55);
+
+  /* --- طباعة --- */
+  --font-display: 'Aref Ruqaa', 'Amiri', 'Traditional Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --font-body: 'Cairo', 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif;
+
+  /* --- إيقاع المسافات --- */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 7rem;
+
+  --radius-md: 18px;
+  --radius-lg: 28px;
+
+  --ease-soft: cubic-bezier(.22, 1, .36, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  background: radial-gradient(120% 90% at 50% -10%, var(--wine) 0%, var(--black-1) 45%, var(--black-0) 100%);
+  color: var(--white);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+p { margin: 0; }
+
+button, input {
+  font-family: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--pink-deep);
+  color: var(--white);
+}
+
+/* Scrollbar (webkit) */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--black-0); }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--pink-deep), var(--red-deep));
+  border-radius: 10px;
+}
+
+/* =====================================================================
+   عناصر زجاجية (Glassmorphism)
+   ===================================================================== */
+.glass-card {
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* =====================================================================
+   خلفيات ثابتة: قلوب عائمة + كونفيتي
+   ===================================================================== */
+.hearts-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.floating-heart {
+  position: absolute;
+  bottom: -10%;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--pink);
+  text-shadow: 0 0 10px var(--pink-deep), 0 0 22px var(--red);
+  opacity: 0.85;
+  will-change: transform, opacity;
+  animation-name: floatUp;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  user-select: none;
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.9; }
+  100% { transform: translateY(-115vh) translateX(var(--drift, 30px)) rotate(360deg); opacity: 0; }
+}
+
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* =====================================================================
+   Toast ترحيبي
+   ===================================================================== */
+.welcome-toast {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translate(-50%, -140%);
+  z-index: 70;
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 0 25px rgba(255, 47, 110, 0.45);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--white);
+  transition: transform 0.6s var(--ease-soft);
+  white-space: nowrap;
+}
+
+.welcome-toast.show {
+  transform: translate(-50%, 0);
+}
+
+/* =====================================================================
+   شاشات عامة
+   ===================================================================== */
+.screen {
+  position: relative;
+  z-index: 5;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* =====================================================================
+   شاشة تسجيل الدخول
+   ===================================================================== */
+.login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  transition: opacity 0.7s var(--ease-soft), transform 0.7s var(--ease-soft), filter 0.7s var(--ease-soft);
+}
+
+.login-screen.fade-out {
+  opacity: 0;
+  transform: scale(1.04);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.login-card {
+  width: min(440px, 100%);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  animation: cardEnter 1s var(--ease-soft) both;
+}
+
+@keyframes cardEnter {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.heart-lock-wrap {
+  position: relative;
+  width: 140px;
+  height: 130px;
+  margin: 0 auto var(--space-sm);
+}
+
+.heart-lock {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 18px rgba(255, 47, 110, 0.65)) drop-shadow(0 0 36px rgba(255, 23, 68, 0.35));
+  animation: heartIdle 2.6s ease-in-out infinite;
+}
+
+@keyframes heartIdle {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.045); }
+}
+
+.heart-crack {
+  stroke: var(--white);
+  stroke-width: 0;
+  opacity: 0;
+}
+
+.lock-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 42px;
+  height: 42px;
+  transform: translate(-50%, -46%);
+  filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.6));
+}
+
+.lock-body { fill: var(--black-1); stroke: var(--white); stroke-width: 1.5; }
+.lock-shackle { fill: none; stroke: var(--white); stroke-width: 3.5; stroke-linecap: round; }
+.lock-dot { fill: var(--pink-soft); }
+
+/* --- حالة فتح القفل (Signature moment) --- */
+.heart-lock-wrap.unlocking .heart-lock {
+  animation: heartBurst 1.1s var(--ease-soft) forwards;
+}
+.heart-lock-wrap.unlocking .lock-icon {
+  animation: lockVanish 0.5s ease-in forwards;
+}
+.heart-lock-wrap.unlocking .heart-crack {
+  animation: crackGrow 0.6s ease-out 0.15s forwards;
+}
+
+@keyframes heartBurst {
+  0%   { transform: scale(1); filter: drop-shadow(0 0 18px rgba(255,47,110,.65)) drop-shadow(0 0 36px rgba(255,23,68,.35)); }
+  35%  { transform: scale(1.22); filter: drop-shadow(0 0 40px rgba(255,93,162,1)) drop-shadow(0 0 70px rgba(255,255,255,.8)); }
+  70%  { transform: scale(1.3) rotate(-1deg); filter: drop-shadow(0 0 60px rgba(255,255,255,1)); opacity: 1; }
+  100% { transform: scale(1.5); filter: drop-shadow(0 0 10px rgba(255,255,255,0)); opacity: 0; }
+}
+
+@keyframes lockVanish {
+  0%   { transform: translate(-50%, -46%) scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: translate(-50%, -80%) scale(0.2) rotate(25deg); opacity: 0; }
+}
+
+@keyframes crackGrow {
+  0%   { stroke-width: 0; opacity: 0; }
+  40%  { stroke-width: 3; opacity: 1; }
+  100% { stroke-width: 10; opacity: 0; }
+}
+
+.login-title {
+  font-size: clamp(1.25rem, 5vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.6;
+  margin-bottom: var(--space-xs);
+  color: var(--white);
+  text-shadow: 0 0 18px rgba(255, 93, 162, 0.55);
+  word-break: break-word;
+}
+
+.login-subtitle {
+  color: var(--pink-soft);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-md);
+  opacity: 0.85;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.input-wrap { position: relative; }
+
+.password-input {
+  width: 100%;
+  padding: 0.95rem 1.2rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--white);
+  font-size: 1.05rem;
+  letter-spacing: 3px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+.password-input::placeholder {
+  color: rgba(255, 246, 248, 0.4);
+  letter-spacing: normal;
+}
+
+.password-input:focus {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 3px rgba(255, 93, 162, 0.22), 0 0 22px rgba(255, 47, 110, 0.35);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.password-input.shake {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-8px); }
+  40%, 60% { transform: translateX(8px); }
+}
+
+/* --- أزرار --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  border-radius: 999px;
+  padding: 0.95rem 1.8rem;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s var(--ease-soft), box-shadow 0.25s var(--ease-soft), filter 0.25s;
+}
+
+.btn:active { transform: scale(0.96); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--pink) 0%, var(--pink-deep) 45%, var(--red) 100%);
+  color: var(--white);
+  box-shadow: 0 6px 24px rgba(255, 23, 68, 0.4);
+  animation: btnIdleGlow 2.8s ease-in-out infinite;
+}
+
+@keyframes btnIdleGlow {
+  0%, 100% { box-shadow: 0 6px 24px rgba(255, 23, 68, 0.4); }
+  50%      { box-shadow: 0 6px 30px rgba(255, 93, 162, 0.6); }
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(255, 47, 110, 0.6), 0 0 30px rgba(255, 93, 162, 0.4);
+  filter: brightness(1.08);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  color: var(--pink-soft);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 93, 162, 0.14);
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(255, 93, 162, 0.3);
+}
+
+.login-error {
+  min-height: 1.4em;
+  color: #ffdfe9;
+  background: rgba(255, 23, 68, 0.16);
+  border: 1px solid rgba(255, 23, 68, 0.4);
+  border-radius: 10px;
+  padding: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.35s var(--ease-soft), transform 0.35s var(--ease-soft), padding 0.35s;
+}
+
+.login-error.show {
+  opacity: 1;
+  transform: translateY(0);
+  padding: 0.55rem 0.8rem;
+}
+
+/* =====================================================================
+   شاشة المحتوى
+   ===================================================================== */
+.content-screen {
+  padding-bottom: var(--space-xl);
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s var(--ease-soft), transform 0.9s var(--ease-soft);
+}
+
+.content-screen.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.floating-controls {
+  position: fixed;
+  top: 1.2rem;
+  inset-inline-start: 1.2rem;
+  display: flex;
+  gap: 0.7rem;
+  z-index: 50;
+}
+
+.icon-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(12px);
+  color: var(--pink-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease-soft), box-shadow 0.25s, color 0.25s;
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 0 20px rgba(255, 93, 162, 0.45);
+  color: var(--white);
+}
+
+.icon-btn svg { width: 22px; height: 22px; }
+.note-stroke, .gear-stroke { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.note-fill { fill: currentColor; stroke: none; }
+
+.icon-btn#music-toggle.playing .icon-note {
+  animation: noteBob 1.2s ease-in-out infinite;
+}
+@keyframes noteBob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-3px) rotate(-6deg); }
+}
+
+/* --- Hero --- */
+.hero-section {
+  min-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-md);
+  position: relative;
+}
+
+.hero-eyebrow {
+  color: var(--pink-soft);
+  letter-spacing: 4px;
+  font-size: 0.85rem;
+  margin-bottom: var(--space-sm);
+  opacity: 0;
+  animation: fadeIn 1s var(--ease-soft) 0.2s forwards;
+}
+
+.hero-title {
+  font-size: clamp(1.7rem, 7vw, 4rem);
+  font-weight: 800;
+  display: inline-block;
+  color: var(--white);
+  text-shadow:
+    0 0 12px rgba(255, 93, 162, 0.85),
+    0 0 30px rgba(255, 47, 110, 0.6),
+    0 0 60px rgba(255, 23, 68, 0.35);
+  min-height: 1.3em;
+  max-width: 92vw;
+  word-break: break-word;
+}
+
+.hero-cursor {
+  color: var(--pink);
+  font-weight: 300;
+  font-size: clamp(2rem, 7vw, 4rem);
+  animation: blink 1s steps(1) infinite;
+}
+
+.hero-cursor.hide { display: none; }
+
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.hero-sub {
+  margin-top: var(--space-sm);
+  color: var(--pink-soft);
+  font-size: 1.05rem;
+  opacity: 0;
+  animation: fadeIn 1s var(--ease-soft) 2.4s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 0.6;
+}
+.scroll-hint span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--pink);
+  animation: hint 1.6s ease-in-out infinite;
+}
+.scroll-hint span:nth-child(2) { animation-delay: 0.3s; }
+@keyframes hint {
+  0%, 100% { opacity: 0.2; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(6px); }
+}
+
+/* --- أقسام عامة --- */
+.section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md);
+}
+
+/* أنيميشن ظهور الأقسام عند التمرير */
+.reveal-section {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.9s var(--ease-soft), transform 0.9s var(--ease-soft);
+}
+
+.reveal-section.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+
+.section-eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  color: var(--pink-soft);
+  padding: 0.3rem 1rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  margin-bottom: var(--space-xs);
+}
+
+.section-title {
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  color: var(--white);
+}
+
+/* --- الرسالة الرومانسية --- */
+.letter-card {
+  padding: var(--space-md) var(--space-md);
+}
+
+.letter-messages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.letter-message {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.6vw, 1.5rem);
+  line-height: 2;
+  text-align: center;
+  color: var(--white);
+  text-shadow: 0 0 10px rgba(255, 93, 162, 0.55), 0 0 22px rgba(255, 23, 68, 0.25);
+  word-break: break-word;
+  max-width: 46ch;
+  opacity: 0;
+  animation: messageFadeIn 0.6s var(--ease-soft) forwards;
+}
+
+@keyframes messageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.letter-message.glow-active {
+  animation: messageFadeIn 0.6s var(--ease-soft) forwards, glowPulse 3.2s ease-in-out 0.6s infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 10px rgba(255, 93, 162, 0.55), 0 0 22px rgba(255, 23, 68, 0.25); }
+  50%      { text-shadow: 0 0 16px rgba(255, 93, 162, 0.85), 0 0 34px rgba(255, 23, 68, 0.45); }
+}
+
+.letter-divider {
+  color: var(--pink);
+  font-size: 0.9rem;
+  opacity: 0.55;
+  letter-spacing: 6px;
+}
+
+/* --- العداد --- */
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+
+.countdown-box {
+  padding: var(--space-md) var(--space-xs);
+  text-align: center;
+  transition: transform 0.3s var(--ease-soft), box-shadow 0.3s;
+}
+
+.countdown-box:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--glass-shadow), 0 0 26px rgba(255, 93, 162, 0.35);
+}
+
+.countdown-number {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 800;
+  color: var(--pink);
+  text-shadow: 0 0 18px rgba(255, 47, 110, 0.7);
+}
+
+.countdown-label {
+  display: block;
+  margin-top: 0.3rem;
+  color: var(--pink-soft);
+  font-size: 0.9rem;
+}
+
+/* --- المعرض --- */
+.gallery-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-md);
+}
+
+.upload-label { cursor: pointer; }
+
+.gallery-hint {
+  color: rgba(255, 246, 248, 0.5);
+  font-size: 0.8rem;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: var(--space-sm);
+}
+
+.gallery-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  animation: photoIn 0.5s var(--ease-soft) both;
+}
+
+@keyframes photoIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s var(--ease-soft), filter 0.5s;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.08);
+  filter: brightness(1.05);
+}
+
+.gallery-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.55), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gallery-item:hover::after { opacity: 1; }
+
+.gallery-delete {
+  position: absolute;
+  top: 6px;
+  inset-inline-end: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(20, 3, 10, 0.7);
+  color: var(--white);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.25s, transform 0.25s, background 0.25s;
+}
+
+.gallery-item:hover .gallery-delete {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.gallery-delete:hover { background: var(--red); }
+
+.gallery-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: rgba(255, 246, 248, 0.45);
+  padding: var(--space-lg) 0;
+  font-size: 0.95rem;
+}
+
+/* --- تذييل --- */
+.site-footer {
+  text-align: center;
+  padding-top: var(--space-lg);
+  color: rgba(255, 246, 248, 0.4);
+  font-size: 0.85rem;
+}
+
+/* =====================================================================
+   نافذة تغيير كلمة السر
+   ===================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 1, 6, 0.65);
+  backdrop-filter: blur(6px);
+  padding: var(--space-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-soft);
+}
+
+.modal-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  width: min(420px, 100%);
+  padding: var(--space-md);
+  position: relative;
+  transform: translateY(16px) scale(0.97);
+  transition: transform 0.35s var(--ease-soft);
+}
+
+.modal-overlay.show .modal-card {
+  transform: translateY(0) scale(1);
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.8rem;
+  inset-inline-end: 0.9rem;
+  background: none;
+  border: none;
+  color: var(--pink-soft);
+  font-size: 1.6rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s, transform 0.2s;
+}
+.modal-close:hover { color: var(--white); transform: rotate(90deg); }
+
+.modal-title {
+  text-align: center;
+  font-size: 1.4rem;
+  margin-bottom: var(--space-md);
+  color: var(--white);
+  text-shadow: 0 0 14px rgba(255, 93, 162, 0.5);
+}
+
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.modal-label {
+  font-size: 0.85rem;
+  color: var(--pink-soft);
+  margin-top: 0.4rem;
+}
+
+.settings-message {
+  min-height: 1.3em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+.settings-message.error { color: #ffb3c2; }
+.settings-message.success { color: #b3ffcf; }
+
+/* =====================================================================
+   الاستجابة (Responsive)
+   ===================================================================== */
+@media (max-width: 640px) {
+  .section { padding: var(--space-md) var(--space-sm); }
+  .login-card { padding: var(--space-md) var(--space-sm); }
+  .countdown-grid { gap: var(--space-xs); }
+  .countdown-box { padding: var(--space-sm) var(--space-xs); }
+  .floating-controls { top: 0.8rem; inset-inline-start: 0.8rem; }
+  .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+  .letter-messages { gap: var(--space-sm); }
+  .letter-card { padding: var(--space-md) var(--space-sm); }
+  .btn { width: 100%; min-height: 48px; }
+  .icon-btn { width: 48px; height: 48px; }
+  .password-input { min-height: 48px; }
+}
+
+/* =====================================================================
+   احترام تفضيل تقليل الحركة
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* وصول لوحة المفاتيح */
+a:focus-visible, button:focus-visible, input:focus-visible, label:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: 3px;
+}

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>لِقلبِك وحدَه</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ============ خلفية القلوب العائمة (تظهر طوال الوقت) ============ -->
+  <div id="hearts-bg" class="hearts-bg" aria-hidden="true"></div>
+
+  <!-- ============ كانفاس الكونفيتي ============ -->
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- ============ رسالة ترحيب سريعة (Toast) ============ -->
+  <div id="welcome-toast" class="welcome-toast" role="status" aria-live="polite"></div>
+
+  <!-- ======================================================= -->
+  <!-- ==================  شاشة تسجيل الدخول  ================== -->
+  <!-- ======================================================= -->
+  <main id="login-screen" class="screen login-screen">
+    <div class="login-card glass-card">
+
+      <div class="heart-lock-wrap">
+        <svg class="heart-lock" id="heart-lock-svg" viewBox="0 0 200 180" aria-hidden="true">
+          <defs>
+            <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ff5da2"/>
+              <stop offset="55%" stop-color="#ff2f6e"/>
+              <stop offset="100%" stop-color="#b3001b"/>
+            </linearGradient>
+          </defs>
+          <path id="heart-path" class="heart-path"
+            d="M100 165
+               C 40 120, 5 85, 5 50
+               C 5 20, 28 2, 55 2
+               C 75 2, 92 13, 100 32
+               C 108 13, 125 2, 145 2
+               C 172 2, 195 20, 195 50
+               C 195 85, 160 120, 100 165 Z"
+            fill="url(#heartGradient)"/>
+          <!-- خط الانشقاق يظهر عند فتح القفل -->
+          <line id="heart-crack" class="heart-crack" x1="100" y1="20" x2="100" y2="150"/>
+        </svg>
+
+        <svg class="lock-icon" id="lock-icon-svg" viewBox="0 0 60 60" aria-hidden="true">
+          <rect x="16" y="27" width="28" height="24" rx="4" class="lock-body"/>
+          <path d="M22 27 V18 a8 8 0 0 1 16 0 V27" class="lock-shackle"/>
+          <circle cx="30" cy="37" r="3" class="lock-dot"/>
+        </svg>
+      </div>
+
+      <h1 class="login-title">قلبي قافل&nbsp;... وانتي بس اللي تعرفي تفتحيه</h1>
+      <p class="login-subtitle">اكتبي كلمة السر وتعالي بينا نرجع زي زمان</p>
+
+      <form id="login-form" class="login-form" autocomplete="off">
+        <div class="input-wrap">
+          <input
+            type="password"
+            id="password-input"
+            class="password-input"
+            placeholder="كلمة السر"
+            inputmode="numeric"
+            aria-label="كلمة السر"
+            required
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="unlock-btn">
+          <span>ادخلي يا حياتي</span>
+        </button>
+
+        <p id="login-error" class="login-error" role="alert" aria-live="assertive"></p>
+      </form>
+    </div>
+  </main>
+
+  <!-- ======================================================= -->
+  <!-- ==================  شاشة المحتوى  ==================== -->
+  <!-- ======================================================= -->
+  <div id="content-screen" class="screen content-screen" hidden>
+
+    <!-- أزرار عائمة ثابتة -->
+    <div class="floating-controls">
+      <button id="music-toggle" class="icon-btn" type="button" title="شغّلي / وقّفي الأغنية" aria-pressed="false">
+        <svg class="icon-note" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 18V5l12-2v13" class="note-stroke"/>
+          <circle cx="6" cy="18" r="3" class="note-fill"/>
+          <circle cx="18" cy="16" r="3" class="note-fill"/>
+        </svg>
+      </button>
+
+      <button id="settings-toggle" class="icon-btn" type="button" title="غيّري كلمة السر">
+        <svg class="icon-gear" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" class="gear-stroke"/>
+          <path class="gear-stroke" d="M19.4 13.5a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V19.6a2 2 0 1 1-4 0v-.1a1.65 1.65 0 0 0-1.08-1.5 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H4.4a2 2 0 1 1 0-4h.1a1.65 1.65 0 0 0 1.5-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.05a1.65 1.65 0 0 0 1-1.51V4.4a2 2 0 1 1 4 0v.1a1.65 1.65 0 0 0 1 1.51h.05a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.05a1.65 1.65 0 0 0 1.51 1h.19a2 2 0 1 1 0 4h-.1a1.65 1.65 0 0 0-1.5 1.08Z"/>
+        </svg>
+      </button>
+    </div>
+
+    <audio id="bg-music" src="music.mp3" loop preload="auto"></audio>
+
+    <!-- ============ Hero / رسالة الترحيب ============ -->
+    <section class="hero-section">
+      <p class="hero-eyebrow">وحشتيني والله</p>
+      <h1 class="hero-title" id="hero-title" aria-live="off"></h1>
+      <span class="hero-cursor" id="hero-cursor">|</span>
+      <p class="hero-sub">كل حرف هنا مكتوب وانا فاكرك في كل تفصيلة</p>
+      <div class="scroll-hint">
+        <span></span>
+        <span></span>
+      </div>
+    </section>
+
+    <!-- ============ الرسائل الرومانسية ============ -->
+    <section class="section letter-section reveal-section" id="letter-section">
+      <div class="section-head">
+        <span class="section-eyebrow">من قلبي ليكي</span>
+        <h2 class="section-title">كلمتين... ولا يمكن أكتر شوية 🤍</h2>
+      </div>
+      <div class="glass-card letter-card">
+        <div id="letter-messages" class="letter-messages"></div>
+      </div>
+    </section>
+
+    <!-- ============ العداد ============ -->
+    <section class="section countdown-section reveal-section" id="countdown-section">
+      <div class="section-head">
+        <span class="section-eyebrow">من ساعة ما بقينا احنا</span>
+        <h2 class="section-title">وعدي إن الحكاية دي لسه في أولها</h2>
+      </div>
+
+      <div class="countdown-grid">
+        <div class="glass-card countdown-box">
+          <span class="countdown-number" id="cd-days">0</span>
+          <span class="countdown-label">يوم</span>
+        </div>
+        <div class="glass-card countdown-box">
+          <span class="countdown-number" id="cd-hours">0</span>
+          <span class="countdown-label">ساعة</span>
+        </div>
+        <div class="glass-card countdown-box">
+          <span class="countdown-number" id="cd-minutes">0</span>
+          <span class="countdown-label">دقيقة</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ معرض الصور ============ -->
+    <section class="section gallery-section reveal-section" id="gallery-section">
+      <div class="section-head">
+        <span class="section-eyebrow">لحظاتنا الحلوة</span>
+        <h2 class="section-title">صور بتفكرنا احنا كنا فين</h2>
+      </div>
+
+      <div class="gallery-toolbar">
+        <label for="photo-upload" class="btn btn-secondary upload-label">
+          <span>+ ضيفي صورة</span>
+        </label>
+        <input type="file" id="photo-upload" accept="image/*" multiple hidden>
+        <p class="gallery-hint" id="gallery-hint">الصور بتتحفظ في المتصفح ده بس، محدش هيشوفها غيرك</p>
+      </div>
+
+      <div class="gallery-grid" id="gallery-grid">
+        <!-- الصور تُضاف هنا ديناميكيًا -->
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>اتعملت بحب، وعشانك انتي بس ❤️</p>
+    </footer>
+  </div>
+
+  <!-- ======================================================= -->
+  <!-- ============  نافذة تغيير كلمة السر  ================== -->
+  <!-- ======================================================= -->
+  <div id="settings-modal" class="modal-overlay" hidden>
+    <div class="glass-card modal-card">
+      <button class="modal-close" id="modal-close-btn" type="button" aria-label="إغلاق">×</button>
+      <h3 class="modal-title">غيّري كلمة السر</h3>
+
+      <form id="password-form" class="password-form" autocomplete="off">
+        <label class="modal-label" for="current-password">كلمة السر الحالية</label>
+        <input type="password" id="current-password" class="password-input" required>
+
+        <label class="modal-label" for="new-password">كلمة السر الجديدة</label>
+        <input type="password" id="new-password" class="password-input" required minlength="4">
+
+        <label class="modal-label" for="confirm-password">تأكيد كلمة السر الجديدة</label>
+        <input type="password" id="confirm-password" class="password-input" required minlength="4">
+
+        <p id="settings-message" class="settings-message" role="alert"></p>
+
+        <button type="submit" class="btn btn-primary">احفظي التغيير</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
